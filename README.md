@@ -19,6 +19,7 @@ case:
 66 end wav array
 7 box chdir
 #7 new box passwd prompt
+#7 squelch
 #9 outdial
 
 
