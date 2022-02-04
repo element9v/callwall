@@ -5,7 +5,6 @@ boxes 1001-nnnn as subdirs which record individual datestamped wavs loaded into 
 CALL FOR DEVRLOPERS. #np_collective
 
 
-<?
 case:
 1 ogm
 #2 record
