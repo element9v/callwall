@@ -12,6 +12,7 @@ box='1001'
 $response = new VoiceResponse();
 
 // If the user entered digits, process their request
+$i=0; #? 
 if (array_key_exists('Digits', $_POST)) {
     switch ($_POST['Digits']) {
     case 1:
@@ -20,6 +21,7 @@ if (array_key_exists('Digits', $_POST)) {
         break;
     case 2:
 	$response = new VoiceResponse();
+	$response->box=$box
 	$response->record(['transcribe' => 'true',
 	  'transcribeCallback' => '/emotive/handler.php']);
         #$response->record($box+'/'+$DATESTR+'wall.wav');
@@ -29,14 +31,18 @@ if (array_key_exists('Digits', $_POST)) {
 	break;
     case 4:
 	$i--;
+	$response->say($images[$i]); $i++;
 	break;
     case 5:
 	#play callwall
 	#array of datestr wavs
-	    #i valbpointer
+	$path    = $box;
+	$files = scandir($path); $total = count($files); $images = array(); for($x = 0; $x <= $total; $x++): if ($files[$x] != '.' && $files[$x] != '..') { $images[] = $files[$x]; } endfor;
+	$response->say($images[$i]); $i++;
 	break;
     case 6:
 	$i++;
+	$response->say($images[$i]); $i++;
 	break;
     case 7[0-9][0-9][0-9][0-9]:
 	box=substr($_POST['Digits'],1,4); #truncate 7
