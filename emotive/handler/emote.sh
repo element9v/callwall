@@ -12,3 +12,4 @@ awk -f sum.awk blah > rage.txt
 rm blah
 for emote in $(cat ../amazement.txt); do { grep ${emote} $msgfile | wc -l>>blah; }; done
 awk -f sum.awk blah > amazement.txt
+./build.sh
