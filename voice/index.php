@@ -3,6 +3,11 @@ require_once '/path/to/vendor/autoload.php';
 
 use Twilio\TwiML\VoiceResponse;
 
+#sessionvar for boxid/dir
+#array for datestr recordings
+
+box='1001'
+
 // Use the Twilio PHP SDK to build an XML response
 $response = new VoiceResponse();
 
@@ -11,13 +16,45 @@ if (array_key_exists('Digits', $_POST)) {
     switch ($_POST['Digits']) {
     case 1:
 	# play ogm
-        $response>play('ogm.wav');
+        $response>play($box+'/ogm.wav');
         break;
     case 2:
-        $response->record($DATESTR+'wall.wav');
+        $response->record($box+'/'+$DATESTR+'wall.wav');
         break;
-    default:
-        $response->say('press 0 for help');
+    case 3:
+	#handle sms
+	break;
+    case 4:
+	$i--;
+	break;
+    case 5:
+	#play callwall
+	#array of datestr wavs
+	    #i valbpointer
+	break;
+    case 6:
+	$i++;
+	break;
+    case 7[0-9][0-9][0-9][0-9]:
+	box=$_POST['Digits']; #truncate 7
+	$response->say('box ' $box);
+	break;
+    case '#'7[0-9][0-9][0-9][0-9]:
+	box=$_POST['Digits']; #truncate 7
+        mkdir $box;
+	$response->say('password');
+	#gather digits/handle
+	#if e $box/pass handle compare
+	 if $box/pass matches post handle
+	  admin=true;
+	#else 
+	  $response->say('new password');
+	  #gather write to $box/pass
+	$response->say('record ogm');
+	$response->play('beep.wav');
+	$response->record($box+'/ogm.wav');
+	break;
+    case 0: $response->say('callwall menu.  press 1 to hear the box ogm.  2 to record.  3 to page and #3 to page alphanumerically.  during playback, press 4 to go back and 6 to go forward.  5 pauses and resumes playback.  to change to a new box, press 7 and the box number.  #7 creates a new box and sets a password and option to record an ogm. thank you for leaving your message.'); default: $response->say('press 0 for help');
     }
 } else {
     $gather = $response->gather(array('numDigits' => 'TIMEOUT'));
