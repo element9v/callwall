@@ -19,7 +19,10 @@ if (array_key_exists('Digits', $_POST)) {
         $response>play($box+'/ogm.wav');
         break;
     case 2:
-        $response->record($box+'/'+$DATESTR+'wall.wav');
+	$response = new VoiceResponse();
+	$response->record(['transcribe' => 'true',
+	  'transcribeCallback' => '/emotive/handler.php']);
+        #$response->record($box+'/'+$DATESTR+'wall.wav');
         break;
     case 3:
 	#handle sms
@@ -36,11 +39,11 @@ if (array_key_exists('Digits', $_POST)) {
 	$i++;
 	break;
     case 7[0-9][0-9][0-9][0-9]:
-	box=$_POST['Digits']; #truncate 7
+	box=substr($_POST['Digits'],1,4); #truncate 7
 	$response->say('box ' $box);
 	break;
     case '#'7[0-9][0-9][0-9][0-9]:
-	box=$_POST['Digits']; #truncate 7
+	box=substr($_POST['Digits'],2,4); #truncate #7
         mkdir $box;
 	$response->say('password');
 	#gather digits/handle
@@ -67,3 +70,5 @@ if (array_key_exists('Digits', $_POST)) {
 // Render the response as XML in reply to the webhook request
 header('Content-Type: text/xml');
 echo $response;
+
+
