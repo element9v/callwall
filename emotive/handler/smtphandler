@@ -1,0 +1,32 @@
+import sys
+import smtplib
+
+#msgfile
+text_file = open(sys.argv[1], "r")
+body = text_file.read()
+text_file.close()
+
+pwd = '162636637373'
+user = 'someuser'
+TO = 'callwall@freelists.org'
+
+#FIRST 3 words from msg
+Subject = 'the weather is. . .'
+
+FROM = user
+SUBJECT = Subject
+TEXT = body
+
+# Prepare actual message
+message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+""" % (FROM, ", ".join(TO), SUBJECT, TEXT)
+try:
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.ehlo()
+    server.starttls()
+    server.login(user, pwd)
+    server.sendmail(FROM, TO, message)
+    server.close()
+    print ('successfully sent the mail')
+except:
+    print ("failed to send mail")

@@ -1,9 +1,16 @@
 #!/bin/sh
-rm -f index.html
-curl -o index.html ${1}
-./emote.sh
-cat > song.sbg <<EOF
-ts: $(cat admiration.txt)0+59/5 $(cat ecstasy.txt)00+4/5 $(cat rage.txt)0+4/50 $(cat amazement.txt)0+4/5
-
-0:00 ts
+rm -f index.htm
+lynx -dump ${1} >index
+./emote.sh index
+cat >> scraped.html <<EOF
+<table>
+<td >${1}</td><tr>
+<td align=left><table>
+<td background="#00ff00" width=$(cat admiration.txt)>&nbsp;</td>
+<td bgcolor="#ffff20" width=$(cat ecstasy.txt)>&nbsp;</td>
+<td bgcolor="#ff2020" width=$(cat rage.txt)>&nbsp;</td>
+<td bgcolor="#6060ff" width=$(cat amazement.txt)>&nbsp;</td>
+</table></td>
+<tr>
+</table><br>
 EOF
