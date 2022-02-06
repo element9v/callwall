@@ -6,7 +6,9 @@ use Twilio\TwiML\VoiceResponse;
 #sessionvar for boxid/dir
 #array for datestr recordings
 
-box='1001'
+$rootdir='~/werk/callwall_vms';
+$box='1001';
+$vmdir=$rootdir+'/'+$box;
 
 // Use the Twilio PHP SDK to build an XML response
 $response = new VoiceResponse();
@@ -21,7 +23,7 @@ if (array_key_exists('Digits', $_POST)) {
         break;
     case 2:
 	$response = new VoiceResponse();
-	$response->box=$box
+	$response->box=$box;
 	$response->record(['transcribe' => 'true',
 	  'transcribeCallback' => '/emotive/handler.php']);
         #$response->record($box+'/'+$DATESTR+'wall.wav');
@@ -36,7 +38,7 @@ if (array_key_exists('Digits', $_POST)) {
     case 5:
 	#play callwall
 	#array of datestr wavs
-	$path    = $box;
+	$path    = $vmdir;
 	$files = scandir($path); $total = count($files); $images = array(); for($x = 0; $x <= $total; $x++): if ($files[$x] != '.' && $files[$x] != '..') { $images[] = $files[$x]; } endfor;
 	$response->say($images[$i]); $i++;
 	break;
@@ -44,21 +46,32 @@ if (array_key_exists('Digits', $_POST)) {
 	$i++;
 	$response->say($images[$i]); $i++;
 	break;
-    case 7[0-9][0-9][0-9][0-9]:
-	box=substr($_POST['Digits'],1,4); #truncate 7
-	$response->say('box ' $box);
+    case "7[0-9][0-9][0-9][0-9]":
+	$box=substr($_POST['Digits'],1,4); #truncate 7
+	$response->say("box $box");
 	break;
-    case '#'7[0-9][0-9][0-9][0-9]:
-	box=substr($_POST['Digits'],2,4); #truncate #7
-        mkdir $box;
+    case "#7[0-9][0-9][0-9][0-9]":
+	$box=substr($_POST['Digits'],2,4); #truncate #7
+        mkdir("$box");
 	$response->say('password');
-	#gather digits/handle
-	#if e $box/pass handle compare
-	 if $box/pass matches post handle
-	  admin=true;
+	$response->gather(array('numDigits' => '5'));
+	if file_get_contents($vmdir+'/pass', $pass) {
+		if $pass=$Digits {
+	  	  admin=true;
+		}
+	}
 	#else 
 	  $response->say('new password');
-	  #gather write to $box/pass
+	  $response->gather(array('numDigits' => '5'));
+	  $pass=$Digits;
+	  $response->say('again');
+	  $response->gather(array('numDigits' => '5'));
+	  $passcheck=$Digits;
+	  if cmp($pass,$passcheck) {
+	  file_put_contents('$vmdir/pass', $Digits);
+	  } else {
+	  $response->say('mismatch');
+	  }
 	$response->say('record ogm');
 	$response->play('beep.wav');
 	$response->record($box+'/ogm.wav');
