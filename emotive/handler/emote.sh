@@ -11,14 +11,19 @@ for emote in $(cat ../rage.txt); do { grep ${emote} $msgfile | wc -l >>blah; }; 
 awk -f sum.awk blah > rage.txt
 rm blah
 for emote in $(cat ../amazement.txt); do { grep ${emote} $msgfile | wc -l>>blah; }; done
+
 awk -f sum.awk blah > amazement.txt
 
 cat admiration.txt ecstasy.txt rage.txt amazement.txt >sum
-mult=$(awk '{ total += $1; count++ } END { print int(total *25/count)}' sum)
+awk -f sum.awk sum>sum.sum
+mult=$(awk '{ total += $1; count++ } END { print int(total *count*.25)}' sum.sum)
+
+
 
 for file in admiration.txt ecstasy.txt rage.txt amazement.txt; do {
 	val=$(cat $file)
-	echo $(( $val * $mult)) > $file
+	mult=$(cat sum.sum)
+	echo $(( $val * $mult/25)) > $file
 }; done
 
 
