@@ -1,0 +1,6 @@
+
+#!/bin/bash
+cat admiration.txt ecstasy.txt rage.txt amazement.txt >sum
+
+#awk -f sum.awk sum >> sum
+awk '{ total += $1; count++ } END { print total *25/count}' sum
